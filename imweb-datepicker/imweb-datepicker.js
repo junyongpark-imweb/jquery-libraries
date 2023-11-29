@@ -445,11 +445,11 @@
     // * ==========================
 
     const eventManagerInstance = (function () {
-        const attachOrDetachEvents = (rootSelector, listeners, isAttach) => {
-            const rootSelectorElement = document.querySelector(rootSelector) ?? document;
+        const attachOrDetachEvents = (root, selector, listeners, isAttach) => {
+            const selectorElement = root.querySelector(selector) ?? document;
 
             Object.keys(listeners).forEach((selector) => {
-                const elements = rootSelectorElement.querySelectorAll(selector);
+                const elements = selectorElement.querySelectorAll(selector);
                 const events = listeners[selector];
 
                 elements.forEach((element) => {
@@ -464,12 +464,13 @@
             });
         };
 
-        function wrap(rootSelector) {
-            return new EventManager(rootSelector);
+        function wrap(root, selector) {
+            return new EventManager(root, selector);
         }
 
-        function EventManager(rootSelector) {
-            this.rootSelector = rootSelector;
+        function EventManager(root, selector) {
+            this.root = root;
+            this.selector = selector;
             this.listeners = {};
         }
 
@@ -490,15 +491,15 @@
         };
 
         EventManager.prototype.attachEvents = function () {
-            const { rootSelector, listeners } = this;
+            const { root, selector, listeners } = this;
 
-            attachOrDetachEvents(rootSelector, listeners, true);
+            attachOrDetachEvents(root, selector, listeners, true);
         };
 
         EventManager.prototype.detachEvents = function () {
-            const { rootSelector, listeners } = this;
+            const { root, selector, listeners } = this;
 
-            attachOrDetachEvents(rootSelector, listeners, false);
+            attachOrDetachEvents(root, selector, listeners, false);
         };
 
         return wrap;
@@ -631,9 +632,9 @@
             }[type];
         };
 
-        const presetRenderer = () => ({
+        const presetRenderer = (root) => ({
             container: function () {
-                return document.querySelector(`.${SELECTOR.PRESET.CONTAINER}`);
+                return root.querySelector(`.${SELECTOR.PRESET.CONTAINER}`);
             },
             children: function (type) {
                 const instance = presetInstance(getPresetInstanaceType(type));
@@ -675,9 +676,9 @@
             },
         });
 
-        const typeButtonRenderer = () => ({
+        const typeButtonRenderer = (root) => ({
             container: function () {
-                return document.querySelector(`.${SELECTOR.ACTION.TYPE_BUTTON.CONTAINER}`);
+                return root.querySelector(`.${SELECTOR.ACTION.TYPE_BUTTON.CONTAINER}`);
             },
             children: function (type) {
                 return ACTIONS.map(({ label, value }) => {
@@ -718,9 +719,9 @@
             },
         });
 
-        const displayRenderer = () => ({
+        const displayRenderer = (root) => ({
             container: function () {
-                return document.querySelector(`.${SELECTOR.DISPLAY.CONTAINER}`);
+                return root.querySelector(`.${SELECTOR.DISPLAY.CONTAINER}`);
             },
             children: function (type, start, end) {
                 const options = getDisplayOptions(type);
@@ -778,7 +779,9 @@
         }
 
         DatePickerLayout.prototype.init = function () {
-            const { type, selection } = this.options;
+            const { root, options } = this;
+
+            const { type, selection } = options;
 
             this.type = type;
 
@@ -798,24 +801,24 @@
             };
 
             this.events = {
-                preset: eventManagerInstance(`.${SELECTOR.PRESET.CONTAINER}`),
-                action: eventManagerInstance(`.${SELECTOR.ACTION.CONTAINER}`),
-                button: eventManagerInstance(`.${SELECTOR.BUTTON.CONTAINER}`),
+                preset: eventManagerInstance(root, `.${SELECTOR.PRESET.CONTAINER}`),
+                action: eventManagerInstance(root, `.${SELECTOR.ACTION.CONTAINER}`),
+                button: eventManagerInstance(root, `.${SELECTOR.BUTTON.CONTAINER}`),
             };
         };
 
         DatePickerLayout.prototype.draw = function () {
-            const { type, options, selection } = this;
+            const { root, type, options, selection } = this;
 
             const { fluidMode } = options;
             const { start, end } = selection[type];
 
             const items = [
-                { regex: REGEX.CHUNK.PRESET, html: presetRenderer().html(type) },
-                { regex: REGEX.CHUNK.DISPLAY, html: displayRenderer().html(type, start, end) },
+                { regex: REGEX.CHUNK.PRESET, html: presetRenderer(root).html(type) },
+                { regex: REGEX.CHUNK.DISPLAY, html: displayRenderer(root).html(type, start, end) },
                 {
                     regex: REGEX.CHUNK.TYPE,
-                    html: fluidMode ? typeButtonRenderer().html(type) : "<div></div>",
+                    html: fluidMode ? typeButtonRenderer(root).html(type) : "<div></div>",
                 },
             ];
 
@@ -877,7 +880,7 @@
                 listener: function (e) {
                     const targetType = e.target.dataset.type;
 
-                    const { type, events, selection } = self;
+                    const { root, type, events, selection } = self;
 
                     if (type === targetType) {
                         return false;
@@ -890,9 +893,9 @@
 
                     self.type = targetType;
 
-                    presetRenderer().update(targetType);
-                    typeButtonRenderer().update(targetType);
-                    displayRenderer().update(targetType, start, end);
+                    presetRenderer(root).update(targetType);
+                    typeButtonRenderer(root).update(targetType);
+                    displayRenderer(root).update(targetType, start, end);
 
                     self.setValidation();
 
@@ -973,11 +976,11 @@
         };
 
         DatePickerLayout.prototype.updateDisplayUI = function () {
-            const { type, selection } = this;
+            const { root, type, selection } = this;
 
             const { start, end } = selection[type];
 
-            displayRenderer().update(type, start, end);
+            displayRenderer(root).update(type, start, end);
         };
 
         DatePickerLayout.prototype.setValidation = function () {
@@ -992,13 +995,13 @@
         };
 
         DatePickerLayout.prototype.updateButtonUI = function () {
-            const { isValidate } = this;
+            const { root, isValidate } = this;
 
             const classname = isValidate
                 ? SELECTOR.BUTTON.CONFIRM_BUTTON.ACTIVE
                 : SELECTOR.BUTTON.CONFIRM_BUTTON.DEACTIVE;
 
-            const confirmButton = document.querySelector(`.${SELECTOR.BUTTON.CONFIRM_BUTTON.SELF}`);
+            const confirmButton = root.querySelector(`.${SELECTOR.BUTTON.CONFIRM_BUTTON.SELF}`);
 
             confirmButton.classList.remove(SELECTOR.BUTTON.CONFIRM_BUTTON.ACTIVE);
             confirmButton.classList.remove(SELECTOR.BUTTON.CONFIRM_BUTTON.DEACTIVE);
@@ -1007,7 +1010,9 @@
         };
 
         DatePickerLayout.prototype.getLibraryContainer = function () {
-            return document.querySelector(`.${SELECTOR.LIBRARY.CONTAINER}`);
+            const { root } = this;
+
+            return root.querySelector(`.${SELECTOR.LIBRARY.CONTAINER}`);
         };
 
         DatePickerLayout.DEFAULT_OPTIONS = {
@@ -1461,13 +1466,9 @@
         return this.each(function () {
             const $this = $(this);
 
-            let instance = $this.data(INSTANCE_KEY);
+            const instance = imwebDatePicker(this, typeof option === "object" && option);
 
-            if (!instance) {
-                instance = imwebDatePicker(this, typeof option === "object" && option);
-
-                $this.data(INSTANCE_KEY, instance);
-            }
+            $this.data(INSTANCE_KEY, instance);
 
             if (typeof option === "string") {
                 instance[option]();

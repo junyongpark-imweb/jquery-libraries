@@ -1,15 +1,3 @@
-.vanilla-calendar {
-    padding: 0;
-}
-
-.vanilla-calendar-controls {
-    padding: 0.25rem 28px 0;
-}
-
-.vanilla-calendar-grid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
 /* Base Styles */
 .imweb-datepicker {
     display: grid;

@@ -25,24 +25,14 @@
         </style>
     </head>
     <body>
-        <div class="container"></div>
+        <div class="container1"></div>
+        <br />
+        <div class="container2"></div>
     </body>
     <script>
         (function ($) {
-            $(".container").imwebdatepicker({
-                lang: "ko",
-                type: "date",
-                fluidMode: true,
-                selection: {
-                    date: { start: new Date() },
-                },
-                onConfirm: (start, end, type) => {
-                    console.log(start, end, type);
-                },
-                onCancel: () => {
-                    console.log("cancel");
-                },
-            });
+            $(".container1").imwebdatepicker();
+            $(".container2").imwebdatepicker();
         })(window.jQuery);
     </script>
 </html>
