@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>jQuery Calendar</title>
+        <script src="../lib/jquery/jquery-1.12.4.js"></script>
+        <script src="vendor/vanilla-calendar.min.js"></script>
+        <script src="imweb-datepicker.js"></script>
+        <link rel="stylesheet" href="vendor/vanilla-calendar.min.css" />
+        <link rel="stylesheet" href="vendor/light.min.css" />
+        <link rel="stylesheet" href="imweb-datepicker.css" />
+        <style>
+            html,
+            body,
+            * {
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container"></div>
+    </body>
+    <script>
+        (function ($) {
+            $(".container").imwebdatepicker({
+                lang: "ko",
+                type: "date",
+                fluidMode: true,
+                selection: {
+                    date: { start: new Date() },
+                },
+                onConfirm: (start, end, type) => {
+                    console.log(start, end, type);
+                },
+                onCancel: () => {
+                    console.log("cancel");
+                },
+            });
+        })(window.jQuery);
+    </script>
+</html>
