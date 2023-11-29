@@ -32,7 +32,16 @@
     <script>
         (function ($) {
             $(".container1").imwebdatepicker();
-            $(".container2").imwebdatepicker();
+            $(".container2").imwebdatepicker({
+                range: {
+                    date: {
+                        max: new Date(),
+                    },
+                    month: {
+                        min: "2020-03",
+                    },
+                },
+            });
         })(window.jQuery);
     </script>
 </html>

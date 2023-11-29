@@ -31,12 +31,14 @@
                 const keys = Object.keys(target);
 
                 for (let key = keys.shift(); key; key = keys.shift()) {
+                    const nextSource = source && source[key];
+
                     if (isObject(target[key])) {
                         obj[key] = {};
 
-                        recursive(target[key], source[key], obj[key]);
+                        recursive(target[key], nextSource, obj[key]);
                     } else {
-                        obj[key] = (source && source[key]) ?? target[key];
+                        obj[key] = nextSource ?? target[key];
                     }
                 }
 
@@ -1118,6 +1120,25 @@
             }[type];
         };
 
+        const getRangeOptions = (type, range) => {
+            const { min, max } = range[type];
+
+            const convert = (date, isMin) => {
+                const day = dayInstance(date);
+
+                const key = isMin ? "min" : "max";
+
+                return dayInstance.isInvalidDate(day.toDate())
+                    ? DatePickerLibrary.LIBRARY_DEFAULT_OPTIONS.settings.range[key]
+                    : day.toString(dayInstance.unit.DATE);
+            };
+
+            return {
+                min: convert(min, true),
+                max: convert(max, false),
+            };
+        };
+
         const handleClickDay = (self, dates, onClickDay) => {
             dates.sort((a, b) => new Date(a) - new Date(b));
 
@@ -1162,11 +1183,12 @@
         };
 
         const parseOptions = (self, options) => {
-            const { type, lang, selection, onClickDay, onClickMonth, onClickYear } = options;
+            const { type, lang, selection, range, onClickDay, onClickMonth, onClickYear } = options;
 
             const { start, end } = selection[type];
 
             const typeOptions = getTypeOptions(type)(start, end);
+            const rangeOptions = getRangeOptions(type, range);
 
             return Utils.merge(DatePickerLibrary.LIBRARY_DEFAULT_OPTIONS, {
                 type,
@@ -1174,6 +1196,7 @@
                     lang,
                     selection: typeOptions.selection,
                     selected: typeOptions.selected,
+                    range: rangeOptions,
                 },
                 actions: {
                     clickDay: (e, dates) => {
@@ -1219,7 +1242,10 @@
         };
 
         DatePickerLibrary.prototype.updateLibraryUI = function (type, start, end) {
+            const { range } = this.options;
+
             const typeOptions = getTypeOptions(type)(start, end);
+            const rangeOptions = getRangeOptions(type, range);
 
             this.library.type = type;
             this.library.currentType = type;
@@ -1228,6 +1254,9 @@
                 ...this.library.selected,
                 ...typeOptions.selected,
             };
+
+            this.library.settings.range.min = rangeOptions.min;
+            this.library.settings.range.max = rangeOptions.max;
 
             this.library.reset();
         };
@@ -1239,6 +1268,11 @@
                 [TYPE.DATE]: { start: null, end: null },
                 [TYPE.MONTH]: { start: null, end: null },
                 [TYPE.YEAR]: { start: null, end: null },
+            },
+            range: {
+                [TYPE.DATE]: { min: null, max: null },
+                [TYPE.MONTH]: { min: null, max: null },
+                [TYPE.YEAR]: { min: null, max: null },
             },
             onClickDay: null,
             onClickMonth: null,
@@ -1263,6 +1297,10 @@
                     dates: null,
                     month: null,
                     year: null,
+                },
+                range: {
+                    min: "1970-01-01",
+                    max: "2470-12-31",
                 },
             },
             actions: {
@@ -1337,8 +1375,19 @@
             };
         };
 
+        const getRange = (type, range) => {
+            const unit = getDayInstanceUnit(type);
+
+            const { min, max } = range[type];
+
+            return {
+                min: toDateString(unit, min),
+                max: toDateString(unit, max),
+            };
+        };
+
         const parseOptions = (self, options) => {
-            const { lang, type, fluidMode, selection, onConfirm, onCancel } = options;
+            const { lang, type, fluidMode, selection, range, onConfirm, onCancel } = options;
 
             const date = getSelection(TYPE.DATE, selection);
             const month = getSelection(TYPE.MONTH, selection);
@@ -1366,6 +1415,11 @@
                         [datepickerLibrary.type.DATE]: { ...date },
                         [datepickerLibrary.type.MONTH]: { ...month },
                         [datepickerLibrary.type.YEAR]: { ...year },
+                    },
+                    range: {
+                        [datepickerLibrary.type.DATE]: { ...getRange(TYPE.DATE, range) },
+                        [datepickerLibrary.type.MONTH]: { ...getRange(TYPE.MONTH, range) },
+                        [datepickerLibrary.type.YEAR]: { ...getRange(TYPE.YEAR, range) },
                     },
                     onClickDay: (start, end) => handleClickLibraryDay(self, start, end),
                     onClickMonth: (month) => handleClickLibraryMonth(self, month),
@@ -1448,6 +1502,11 @@
                 date: { start: null, end: null },
                 month: { start: null, end: null },
                 year: { start: null, end: null },
+            },
+            range: {
+                date: { min: null, max: null },
+                month: { min: null, max: null },
+                year: { min: null, max: null },
             },
             onConfirm: null,
             onCancel: null,
