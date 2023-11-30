@@ -537,7 +537,7 @@
                     CONTAINER: "_action-type-button-container",
                     SELF: "_action-type-button",
                     ACTIVE: "datepicker-button--primary",
-                    DEACTIVE: "datepicker-button--outlined",
+                    INACTIVE: "datepicker-button--outlined",
                 },
             },
             LIBRARY: {
@@ -553,7 +553,7 @@
                 CONFIRM_BUTTON: {
                     SELF: "_button-confirm-button",
                     ACTIVE: "datepicker-button--primary",
-                    DEACTIVE: "datepicker-button--disabled",
+                    INACTIVE: "datepicker-button--disabled",
                 },
                 CANCEL_BUTTON: "_button-cancel-button",
                 RESET_BUTTON: "_button-reset-button",
@@ -691,7 +691,7 @@
                     classnames.push(
                         isSelected
                             ? SELECTOR.ACTION.TYPE_BUTTON.ACTIVE
-                            : SELECTOR.ACTION.TYPE_BUTTON.DEACTIVE
+                            : SELECTOR.ACTION.TYPE_BUTTON.INACTIVE
                     );
 
                     return `
@@ -1003,12 +1003,12 @@
 
             const classname = isValidate
                 ? SELECTOR.BUTTON.CONFIRM_BUTTON.ACTIVE
-                : SELECTOR.BUTTON.CONFIRM_BUTTON.DEACTIVE;
+                : SELECTOR.BUTTON.CONFIRM_BUTTON.INACTIVE;
 
             const confirmButton = root.querySelector(`.${SELECTOR.BUTTON.CONFIRM_BUTTON.SELF}`);
 
             confirmButton.classList.remove(SELECTOR.BUTTON.CONFIRM_BUTTON.ACTIVE);
-            confirmButton.classList.remove(SELECTOR.BUTTON.CONFIRM_BUTTON.DEACTIVE);
+            confirmButton.classList.remove(SELECTOR.BUTTON.CONFIRM_BUTTON.INACTIVE);
 
             confirmButton.classList.add(classname);
         };
