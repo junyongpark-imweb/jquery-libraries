@@ -171,14 +171,14 @@
     border-color: #1a6dff;
 }
 
-.imweb-datepicker .footer-container .label {
+.imweb-datepicker .footer-container .display-label {
     font-size: 12px;
     font-weight: 400;
     line-height: 16px;
     color: #15181e;
 }
 
-.imweb-datepicker .footer-container .time {
+.imweb-datepicker .footer-container .display-time {
     font-size: 12px;
     font-weight: 400;
     line-height: 16px;

@@ -735,12 +735,12 @@
 
                 return `
                     <div class="${SELECTOR.DISPLAY.START} display display--selected">
-                        <span class="label">${options.start}</span>
-                        <span class="time">${start || "선택하세요"}</span>
+                        <span class="display-label">${options.start}</span>
+                        <span class="display-time">${start || "선택하세요"}</span>
                     </div>
                     <div class="${SELECTOR.DISPLAY.END} display display--selected">
-                        <span class="label">${options.end}</span>
-                        <span class="time">${end || "선택하세요"}</span>
+                        <span class="display-label">${options.end}</span>
+                        <span class="display-time">${end || "선택하세요"}</span>
                     </div> 
                 `;
             },
