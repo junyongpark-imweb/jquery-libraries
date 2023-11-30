@@ -1575,6 +1575,7 @@
 
     $.fn.imwebdatepicker = Plugin;
     $.fn.imwebdatepicker.Constructor = imwebDatePicker;
+    $.fn.imwebdatepicker.instanceKey = INSTANCE_KEY;
 
     $.fn.imwebdatepicker.noConflict = function () {
         $.fn.imwebdatepicker = old;
