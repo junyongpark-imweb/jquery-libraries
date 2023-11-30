@@ -1546,6 +1546,8 @@
             onCancel: null,
         };
 
+        wrap.DEFAULT_OPTIONS = ImwebDatePicker.DEFAULT_OPTIONS;
+
         return wrap;
     })();
 
