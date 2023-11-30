@@ -666,7 +666,10 @@
                 const container = this.container();
                 const children = this.children(type);
 
-                container.textContent = "";
+                for (; container.firstChild; ) {
+                    container.removeChild(container.firstChild);
+                }
+
                 container.innerHTML = children;
             },
             html: function (type) {
@@ -809,6 +812,22 @@
                 action: eventManagerInstance(root, `.${SELECTOR.ACTION.CONTAINER}`),
                 button: eventManagerInstance(root, `.${SELECTOR.BUTTON.CONTAINER}`),
             };
+        };
+
+        DatePickerLayout.prototype.destroy = function () {
+            const { root, events } = this;
+
+            events.preset.detachEvents();
+            events.action.detachEvents();
+            events.button.detachEvents();
+
+            events.preset.clearEventListener();
+            events.action.clearEventListener();
+            events.button.clearEventListener();
+
+            for (; root.firstChild; ) {
+                root.removeChild(root.firstChild);
+            }
         };
 
         DatePickerLayout.prototype.draw = function () {
@@ -1243,6 +1262,12 @@
             this.library.init();
         };
 
+        DatePickerLibrary.prototype.destroy = function () {
+            const { library } = this;
+
+            library.destroy();
+        };
+
         DatePickerLibrary.prototype.updateLibraryUI = function (type, start, end) {
             const { range } = this.options;
 
@@ -1494,6 +1519,13 @@
                 instance: libraryInstance,
                 options: library,
             };
+        };
+
+        ImwebDatePicker.prototype.destroy = function () {
+            const { layout, library } = this;
+
+            library.instance.destroy();
+            layout.instance.destroy();
         };
 
         ImwebDatePicker.DEFAULT_OPTIONS = {

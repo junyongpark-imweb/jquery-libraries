@@ -40,6 +40,10 @@
                 modal.style.inset = 0;
 
                 modal.addEventListener("click", function () {
+                    const b = a.data("imweb-datepicker");
+
+                    b.destroy();
+
                     this.remove();
                 });
 
@@ -56,8 +60,20 @@
 
                 document.body.appendChild(modal);
 
-                $("#child").imwebdatepicker();
+                const a = $("#child").imwebdatepicker();
+
+                // window.setInterval(() => {
+                //     const e = new Event("click");
+
+                //     modal.dispatchEvent(e);
+                // }, 500);
             });
+
+            // window.setInterval(() => {
+            //     const e = new Event("click");
+
+            //     $btn.dispatchEvent(e);
+            // }, 1000);
         })(window.jQuery);
     </script>
 </html>
