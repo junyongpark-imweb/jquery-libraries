@@ -7,6 +7,7 @@
         "preset action"
         "preset library"
         "preset footer";
+    width: 100%;
     max-width: 900px;
     background-color: #ffffff;
     border-radius: 20px;

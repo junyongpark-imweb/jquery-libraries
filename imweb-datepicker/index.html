@@ -25,26 +25,38 @@
         </style>
     </head>
     <body>
-        <div class="container1"></div>
-        <br />
-        <div class="container2"></div>
+        <button id="btn">click</button>
     </body>
     <script>
         (function ($) {
-            $(".container1").imwebdatepicker({
-                fluidMode: true,
-            });
+            const $btn = document.querySelector("#btn");
 
-            $(".container2").imwebdatepicker({
-                fluidMode: false,
-                range: {
-                    date: {
-                        max: new Date(),
-                    },
-                    month: {
-                        min: "2020-03",
-                    },
-                },
+            $btn.addEventListener("click", function () {
+                const modal = document.createElement("div");
+                const child = document.createElement("div");
+
+                modal.style.position = "fixed";
+                modal.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+                modal.style.inset = 0;
+
+                modal.addEventListener("click", function () {
+                    this.remove();
+                });
+
+                child.id = "child";
+                child.style.display = "flex";
+                child.style.justifyContent = "center";
+                child.style.alignItems = "center";
+
+                child.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                });
+
+                modal.appendChild(child);
+
+                document.body.appendChild(modal);
+
+                $("#child").imwebdatepicker();
             });
         })(window.jQuery);
     </script>
