@@ -1,0 +1,30 @@
+.imweb-datepicker-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+}
+
+.imweb-datepicker-modal .layout-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.imweb-datepicker-modal .contents-container {
+    width: 900px;
+    padding: 16px;
+}
+
+@media screen and (max-width: 900px) {
+    .imweb-datepicker-modal .layout-container {
+        width: 100%;
+        max-height: 100%;
+    }
+
+    .imweb-datepicker-modal .contents-container {
+        width: auto;
+    }
+}

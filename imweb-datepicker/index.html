@@ -5,11 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>jQuery Calendar</title>
         <script src="../lib/jquery/jquery-1.12.4.js"></script>
+        <script src="../lib/jquery/plugins/jquery.modal.js"></script>
         <script src="vendor/vanilla-calendar.min.js"></script>
         <script src="imweb-datepicker.js"></script>
+        <script src="imweb-datepicker-modal.js"></script>
+        <link rel="stylesheet" href="../lib/jquery/plugins/jquery.modal.css" />
         <link rel="stylesheet" href="vendor/vanilla-calendar.min.css" />
         <link rel="stylesheet" href="vendor/light.min.css" />
         <link rel="stylesheet" href="imweb-datepicker.css" />
+        <link rel="stylesheet" href="imweb-datepicker-modal.css" />
         <style>
             html,
             body,
@@ -26,6 +30,7 @@
     </head>
     <body>
         <button id="btn">click</button>
+        <button id="btn2">click</button>
     </body>
     <script>
         (function ($) {
@@ -74,6 +79,12 @@
 
             //     $btn.dispatchEvent(e);
             // }, 1000);
+
+            const $btn2 = document.querySelector("#btn2");
+
+            $btn2.addEventListener("click", function () {
+                $.imwebdatepickerModal("show");
+            });
         })(window.jQuery);
     </script>
 </html>
