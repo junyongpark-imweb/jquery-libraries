@@ -539,7 +539,6 @@
                     ACTIVE: "datepicker-button--primary",
                     DEACTIVE: "datepicker-button--outlined",
                 },
-                RESET_BUTTON: "_action-reset-button",
             },
             LIBRARY: {
                 CONTAINER: "_library-container",
@@ -557,6 +556,7 @@
                     DEACTIVE: "datepicker-button--disabled",
                 },
                 CANCEL_BUTTON: "_button-cancel-button",
+                RESET_BUTTON: "_button-reset-button",
             },
         };
 
@@ -571,19 +571,19 @@
                 <#Preset />
                 <div class="action-container">
                     <#Type />
-                    <div class="button-group">
-                        <button class="${SELECTOR.ACTION.RESET_BUTTON} datepicker-button datepicker-button--icon datepicker-button--secondary">
-                            <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M2 10C2 10 4.00498 7.26822 5.63384 5.63824C7.26269 4.00827 9.5136 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.89691 21 4.43511 18.2543 3.35177 14.5M2 10V4M2 10H8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            <span>다시 선택</span>
-                        </button>
-                    </div>
                 </div>
                 <div class="${SELECTOR.LIBRARY.CONTAINER} library-container"></div>
                 <div class="footer-container">
                     <#Display />
                     <div class="${SELECTOR.BUTTON.CONTAINER} button-container">
+                        <div class="button-group">
+                            <button class="${SELECTOR.BUTTON.RESET_BUTTON} datepicker-button datepicker-button--icon datepicker-button--secondary">
+                                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2 10C2 10 4.00498 7.26822 5.63384 5.63824C7.26269 4.00827 9.5136 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.89691 21 4.43511 18.2543 3.35177 14.5M2 10V4M2 10H8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span>다시 선택</span>
+                            </button>
+                        </div>
                         <div class="button-group">
                             <button
                                 type="button"
@@ -713,8 +713,10 @@
                 container.innerHTML = children;
             },
             html: function (type) {
+                const classnames = `${SELECTOR.ACTION.TYPE_BUTTON.CONTAINER} type-button-container button-group`;
+
                 return `
-                    <div class="${SELECTOR.ACTION.TYPE_BUTTON.CONTAINER} button-group">
+                    <div class="${classnames}">
                         ${this.children(type)}
                     </div>
                 `;
@@ -872,7 +874,7 @@
             const { events, options } = this;
 
             const { action } = events;
-            const { onChangeType, onClickReset } = options;
+            const { onChangeType } = options;
 
             const self = this;
 
@@ -910,21 +912,6 @@
                 },
             });
 
-            action.registerEventListener({
-                selector: `.${SELECTOR.ACTION.RESET_BUTTON}`,
-                event: "click",
-                listener: function () {
-                    const { type } = self;
-
-                    self.setSelection(null, null);
-                    self.setValidation();
-
-                    if (onClickReset) {
-                        onClickReset(type);
-                    }
-                },
-            });
-
             action.attachEvents();
         };
 
@@ -932,7 +919,7 @@
             const { events, options } = this;
 
             const { button } = events;
-            const { onClickConfirm, onClickCancel } = options;
+            const { onClickReset, onClickConfirm, onClickCancel } = options;
 
             const self = this;
 
@@ -958,6 +945,21 @@
 
                     if (onClickCancel) {
                         onClickCancel(type);
+                    }
+                },
+            });
+
+            button.registerEventListener({
+                selector: `.${SELECTOR.BUTTON.RESET_BUTTON}`,
+                event: "click",
+                listener: function () {
+                    const { type } = self;
+
+                    self.setSelection(null, null);
+                    self.setValidation();
+
+                    if (onClickReset) {
+                        onClickReset(type);
                     }
                 },
             });
@@ -1019,7 +1021,7 @@
 
         DatePickerLayout.DEFAULT_OPTIONS = {
             type: TYPE.DATE,
-            fluidMode: true,
+            fluidMode: false,
             selection: {
                 [TYPE.DATE]: { start: null, end: null },
                 [TYPE.MONTH]: { start: null, end: null },
@@ -1497,7 +1499,7 @@
         ImwebDatePicker.DEFAULT_OPTIONS = {
             lang: window.ADMIN_LANG_CODE || "en",
             type: TYPE.DATE,
-            fluidMode: true,
+            fluidMode: false,
             selection: {
                 date: { start: null, end: null },
                 month: { start: null, end: null },

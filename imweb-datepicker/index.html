@@ -31,8 +31,12 @@
     </body>
     <script>
         (function ($) {
-            $(".container1").imwebdatepicker();
+            $(".container1").imwebdatepicker({
+                fluidMode: true,
+            });
+
             $(".container2").imwebdatepicker({
+                fluidMode: false,
                 range: {
                     date: {
                         max: new Date(),

@@ -110,8 +110,12 @@
 /* Action area Styles */
 .imweb-datepicker .action-container {
     display: flex;
-    justify-content: space-between;
-    padding: 24px;
+    justify-content: flex-start;
+    padding: 24px 24px 0;
+}
+
+.imweb-datepicker .action-container .type-button-container {
+    padding-bottom: 24px;
 }
 
 /* Library area styles */
@@ -182,7 +186,7 @@
 
 .imweb-datepicker .footer-container .button-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
 }
 
 @media screen and (max-width: 768px) {
