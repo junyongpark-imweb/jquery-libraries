@@ -93,7 +93,7 @@
 
 취소 이벤트
 
-- Type `(type: type) => void`
+- Type - `(type: type) => void`
 - Default - `null`
 - Required - `false`
 
